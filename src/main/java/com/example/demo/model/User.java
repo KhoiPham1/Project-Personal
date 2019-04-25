@@ -1,6 +1,9 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -12,8 +15,12 @@ public class User {
     private String userName;
     private String passWord;
 
-    // fetchtype.eager
-    @OneToMany(cascade = CascadeType.ALL, )
+    //jsonignore để loại bỏ những vòng lặp
+    @JsonIgnoreProperties(value = "user",allowSetters = true)
+    // fetchtype.eager 1 kiểu trong làm việc với entity
+    @OneToMany(targetEntity = Image.class, cascade = CascadeType.ALL, mappedBy = "user", orphanRemoval = true)
+    private List<Image> images;
+
     public User() {
     }
 
