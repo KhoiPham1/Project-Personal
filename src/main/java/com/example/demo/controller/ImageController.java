@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.model.Image;
 import com.example.demo.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,13 +12,23 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
 public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    @RequestMapping(value = "/image", method = RequestMethod.POST)
+    @RequestMapping(value = "/list/image", method = RequestMethod.GET)
+    public ResponseEntity<List<Image>> listAllImage(){
+        List<Image> images = imageService.findAll();
+        if (images.isEmpty()){
+            return new ResponseEntity<List<Image>>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<List<Image>>(HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/create/image", method = RequestMethod.POST)
     public ResponseEntity<?> createImage(@RequestParam(name = "file") MultipartFile file, HttpServletRequest servletRequest) throws URISyntaxException {
         try {
             imageService.create(file);
@@ -27,6 +38,7 @@ public class ImageController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail" + "=>" + e.getMessage());
         }
     }
+
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/image/{filename:.+}")
     public ResponseEntity<?> deleteFile (@PathVariable String nameImage){
