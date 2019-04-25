@@ -4,6 +4,7 @@ import com.example.demo.model.Image;
 import com.example.demo.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,7 +20,7 @@ public class ImageController {
     @Autowired
     private ImageService imageService;
 
-    @RequestMapping(value = "/list/image", method = RequestMethod.GET)
+    @RequestMapping(value = "/image", method = RequestMethod.GET)
     public ResponseEntity<List<Image>> listAllImage(){
         List<Image> images = imageService.findAll();
         if (images.isEmpty()){
@@ -28,7 +29,7 @@ public class ImageController {
         return new ResponseEntity<List<Image>>(HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/create/image", method = RequestMethod.POST)
+    @RequestMapping(value = "/image", method = RequestMethod.POST)
     public ResponseEntity<?> createImage(@RequestParam(name = "file") MultipartFile file, HttpServletRequest servletRequest) throws URISyntaxException {
         try {
             imageService.create(file);
@@ -39,6 +40,18 @@ public class ImageController {
         }
     }
 
+    @RequestMapping(value = "/image/{id}",method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Image> updateImage(@PathVariable("id") long id, @RequestBody Image image){
+        System.out.println("Updating image" + id);
+        Image currentImage = imageService.findById(id);
+        if (currentImage == null){
+            System.out.println("Image with id" + id + "not found");
+            return new ResponseEntity<Image>(HttpStatus.NOT_FOUND);
+        }
+        currentImage.setImageName(image.getImageName());
+        imageService.saveImage(currentImage);
+        return new ResponseEntity<Image>(currentImage, HttpStatus.OK);
+    }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/image/{filename:.+}")
     public ResponseEntity<?> deleteFile (@PathVariable String nameImage){

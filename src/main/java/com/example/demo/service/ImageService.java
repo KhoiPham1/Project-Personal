@@ -17,6 +17,10 @@ public interface ImageService  {
     //tạo ảnh mới
     void create(MultipartFile file) throws IOException;
 
+    Image findById (Long id);
+
+    void saveImage(Image image);
+
     //xóa ảnh
     void delete(String name) throws IOException;
 }

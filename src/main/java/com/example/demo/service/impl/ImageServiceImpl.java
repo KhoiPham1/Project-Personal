@@ -43,6 +43,16 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
+    public Image findById(Long id) {
+        return imageRepository.findById(id).get();
+    }
+
+    @Override
+    public void saveImage(Image image) {
+        imageRepository.save(image);
+    }
+
+    @Override
     public void delete(String name) throws IOException {
         Image byName = imageRepository.findByName(name);
         imageRepository.delete(byName);
