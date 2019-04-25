@@ -4,10 +4,7 @@ import com.example.demo.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,6 +25,16 @@ public class ImageController {
             return ResponseEntity.created(locationUri).body("success upload");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail" + "=>" + e.getMessage());
+        }
+    }
+
+    @RequestMapping(method = RequestMethod.DELETE, value = "/image/{filename:.+}")
+    public ResponseEntity<?> deleteFile (@PathVariable String nameImage){
+        try {
+            imageService.delete(nameImage);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("success delete");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("fail delete");
         }
     }
 }
