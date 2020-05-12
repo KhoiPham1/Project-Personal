@@ -23,6 +23,7 @@ public class ImageController {
     @RequestMapping(value = "/image", method = RequestMethod.GET)
     public ResponseEntity<List<Image>> listAllImage(){
         List<Image> images = imageService.findAll();
+        String a = "b";
         if (images.isEmpty()){
             return new ResponseEntity<List<Image>>(HttpStatus.NO_CONTENT);
         }
