@@ -54,7 +54,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public void delete(String name) throws IOException {
-        Image byName = imageRepository.findByName(name);
+        Image byName = imageRepository.findByImageName(name);
         imageRepository.delete(byName);
         Files.deleteIfExists(Paths.get(UPLOAD, name));
         //ddeer xóa ảnh trong file upload-image
